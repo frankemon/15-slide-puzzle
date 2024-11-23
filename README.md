@@ -44,4 +44,4 @@ Make sure you have the following installed on your machine:
    ```
 
 4. **Open the browser:**
-   The server will start, and you will see a message in the terminal with a link to http://localhost:5173/. Click the link or open it in your browser to view the game.
+   The server will start, and you will see a message in the terminal with a link to http://localhost:5173/projects/15-slide-puzzle/. Click the link or open it in your browser to view the game.

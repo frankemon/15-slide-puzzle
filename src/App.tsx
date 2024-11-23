@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Board from "./components/Board";
 import Button from "./components/Button";
 import Modal from "./components/Modal";
+import solvedImg from "./assets/solved.png";
 
 // Constants for board and testing solved state for modal popup
 const COLS = 5;
@@ -51,7 +52,10 @@ const App: React.FC = () => {
   ]);
   // Track empty tile
   const [emptyTile, setEmptyTile] = useState<number>(0);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<{
+    init: boolean;
+    solved: boolean;
+  }>({ init: true, solved: false });
   const [moveCount, setMoveCount] = useState<number>(0);
   const [previousScore, setPreviousScore] = useState<number>(0);
   const [isSolved, setIsSolved] = useState<boolean>(false);
@@ -61,7 +65,7 @@ const App: React.FC = () => {
       // Set game to solved for testing and show modal
       setTiles(tiles);
       setEmptyTile(0);
-      setShowModal(true);
+      setShowModal({ init: false, solved: true });
     } else {
       // Normal game start with shallow copy of tiles array and randomize
       const shuffledTiles = randomizeTiles([...tiles]);
@@ -69,6 +73,8 @@ const App: React.FC = () => {
     }
     getScoreFromLocalStorage();
   }, []);
+
+  useEffect(() => {});
 
   // Randomize tiles and set empty tile to 0
   // Used in useEffect and button click
@@ -86,7 +92,7 @@ const App: React.FC = () => {
   // Used in modal button click
   // Uses functional update instead of directly modifying state
   const handleShowModal = () => {
-    setShowModal((prevShowModal) => !prevShowModal);
+    setShowModal({ init: false, solved: false });
     saveScoreToLocalStorage(moveCount);
     setIsSolved(true);
   };
@@ -97,7 +103,7 @@ const App: React.FC = () => {
   const handlePlayAgain = () => {
     setTiles((prevTiles) => randomizeTiles([...prevTiles]));
     saveScoreToLocalStorage(moveCount);
-    setShowModal((prevShowModal) => !prevShowModal);
+    setShowModal({ init: false, solved: false });
     setMoveCount(0);
     setIsSolved(false);
     getScoreFromLocalStorage();
@@ -180,7 +186,7 @@ const App: React.FC = () => {
       const newCount = prevCount + 1;
 
       if (checkIfSolved(newTiles)) {
-        setShowModal(true);
+        setShowModal({ init: false, solved: true });
         setIsSolved(true);
         saveScoreToLocalStorage(prevCount); // Pass the current move count
       }
@@ -191,16 +197,24 @@ const App: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center h-screen p-4">
-      {showModal && (
+      {showModal.init && (
         <Modal
-          text={"Nice you solved it!"}
-          prompt={true}
-          promptText={"Want to play again?"}
-          button={"Yes"}
+          headline="Solve the puzzle"
+          text={"Click single tiles, entire rows or parts of a row to move"}
+          promptText="Good luck!"
+          button="Got it"
+          onClick={handleShowModal}
+          imgSrc={solvedImg}
+        />
+      )}
+      {showModal.solved && (
+        <Modal
+          headline="Great job!"
+          promptText="Want to play again?"
+          button="Yes"
           onClick={handlePlayAgain}
-          close={true}
+          closeText="No"
           onClose={handleShowModal}
-          closeText={"No"}
           moveCount={moveCount}
         />
       )}
