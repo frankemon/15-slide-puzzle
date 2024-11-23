@@ -30,7 +30,7 @@ const Modal: React.FC<ModalProps> = ({
         {headline && <p>{capatalizeText(headline)}</p>}
         {imgSrc && (
           <div>
-            <img src={imgSrc} className="w-full" />
+            <img src={imgSrc} className="w-full max-w-[500px]" />
           </div>
         )}
         {text && <p>{text}</p>}

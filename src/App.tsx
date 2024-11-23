@@ -91,10 +91,12 @@ const App: React.FC = () => {
   // Toggle modal visibility
   // Used in modal button click
   // Uses functional update instead of directly modifying state
-  const handleShowModal = () => {
+  const handleShowModal = (modalType: "init" | "solved") => {
     setShowModal({ init: false, solved: false });
-    saveScoreToLocalStorage(moveCount);
-    setIsSolved(true);
+    if (modalType === "solved") {
+      saveScoreToLocalStorage(moveCount);
+      setIsSolved(true);
+    }
   };
 
   // Play again button click from modal
@@ -196,14 +198,28 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen p-4">
+    <div className="flex flex-col items-center justify-between h-screen">
+      <nav className="w-full shadow shadow-cyan-500 p-4 text-center font-bold bg-transparent lg:px-16">
+        <ul className="flex justify-between space-x-4 text-cyan-500">
+          <li>
+            <a href="https://github.com/frankemon" target="_blank">
+              My GitHub
+            </a>
+          </li>
+          <li>
+            <a href="https://frankemon.github.io/" target="_blank">
+              More from me
+            </a>
+          </li>
+        </ul>
+      </nav>
       {showModal.init && (
         <Modal
           headline="Solve the puzzle"
           text={"Click single tiles, entire rows or parts of a row to move"}
           promptText="Good luck!"
           button="Got it"
-          onClick={handleShowModal}
+          onClick={() => handleShowModal("init")}
           imgSrc={solvedImg}
         />
       )}
@@ -214,11 +230,11 @@ const App: React.FC = () => {
           button="Yes"
           onClick={handlePlayAgain}
           closeText="No"
-          onClose={handleShowModal}
+          onClose={() => handleShowModal("solved")}
           moveCount={moveCount}
         />
       )}
-      <div className="flex flex-col space-y-4 w-full lg:w-1/2">
+      <div className="flex flex-col space-y-4 w-full lg:w-1/2 p-4">
         <div className="flex justify-between items-center font-bold">
           <div>Previous score: {previousScore}</div>
           <div>Moves: {moveCount}</div>
@@ -228,6 +244,9 @@ const App: React.FC = () => {
           <Button text={"Randomize"} onClick={handleRandomize} />
         </div>
       </div>
+      <footer className="w-full border-t-2 border-cyan-500 mt-4 p-2 text-center font-bold bg-transparent">
+        <p>&copy; {new Date().getFullYear()} Frankemon</p>
+      </footer>
     </div>
   );
 };
