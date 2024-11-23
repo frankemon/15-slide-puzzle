@@ -198,7 +198,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-between h-screen">
+    <div className="flex flex-col items-center justify-between h-full">
       <nav className="w-full shadow shadow-cyan-500 p-4 text-center font-bold bg-transparent lg:px-16">
         <ul className="flex justify-between space-x-4 text-cyan-500">
           <li>
